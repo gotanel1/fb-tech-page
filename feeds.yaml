@@ -1,0 +1,103 @@
+# ===================================================================
+# แหล่งข่าวที่บอทจะไปดึงมา  — แก้ไข/เพิ่ม/ลบได้ตามใจ
+#   weight : ยิ่งสูง ยิ่งมีโอกาสถูกเลือกมาโพสต์ (1 = ปกติ)
+#   tag    : ใช้จัดหมวด และส่งให้ AI รู้ว่าควรวางโทนแบบไหน
+# ===================================================================
+
+feeds:
+  # ---------- ข่าวเทคทั่วไป ----------
+  - name: The Verge
+    url: https://www.theverge.com/rss/index.xml
+    weight: 1.2
+    tag: general
+
+  - name: Ars Technica
+    url: https://feeds.arstechnica.com/arstechnica/index
+    weight: 1.2
+    tag: general
+
+  - name: TechCrunch
+    url: https://techcrunch.com/feed/
+    weight: 1.0
+    tag: startup
+
+  - name: Engadget
+    url: https://www.engadget.com/rss.xml
+    weight: 0.8
+    tag: gadget
+
+  # ---------- AI ----------
+  - name: MIT Technology Review
+    url: https://www.technologyreview.com/feed/
+    weight: 1.3
+    tag: ai
+
+  - name: Google Research Blog
+    url: https://research.google/blog/rss/
+    weight: 1.1
+    tag: ai
+
+  - name: Hugging Face Blog
+    url: https://huggingface.co/blog/feed.xml
+    weight: 1.0
+    tag: ai
+
+  # ---------- สาย Dev / Programming ----------
+  - name: Hacker News (Top)
+    url: https://hnrss.org/frontpage?points=250
+    weight: 1.4
+    tag: dev
+
+  - name: GitHub Blog
+    url: https://github.blog/feed/
+    weight: 0.9
+    tag: dev
+
+  - name: Stack Overflow Blog
+    url: https://stackoverflow.blog/feed/
+    weight: 0.7
+    tag: dev
+
+  # ---------- ข่าวไทย ----------
+  - name: Blognone
+    url: https://www.blognone.com/atom.xml
+    weight: 1.5
+    tag: thai
+
+# ===================================================================
+# คำที่ถ้าเจอในหัวข้อข่าว จะ "ข้าม" ไม่เอามาโพสต์
+# ===================================================================
+blocklist:
+  - "deals"
+  - "best deals"
+  - "coupon"
+  - "sale is live"
+  - "sponsored"
+  - "black friday"
+  - "cyber monday"
+  - "podcast"
+  - "we're hiring"
+  - "job board"
+
+# ===================================================================
+# คำที่ถ้าเจอ จะ "ดัน" คะแนนให้สูงขึ้น (เนื้อหาที่เพจอยากได้)
+# ===================================================================
+boost:
+  "ai": 1.4
+  "openai": 1.4
+  "anthropic": 1.4
+  "claude": 1.3
+  "gemini": 1.3
+  "llm": 1.3
+  "open source": 1.2
+  "security": 1.2
+  "breach": 1.2
+  "python": 1.15
+  "rust": 1.15
+  "javascript": 1.1
+  "developer": 1.1
+  "chip": 1.15
+  "nvidia": 1.2
+  "apple": 1.1
+  "google": 1.1
+  "microsoft": 1.05

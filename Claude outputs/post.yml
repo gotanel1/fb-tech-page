@@ -1,0 +1,62 @@
+name: Auto Post to Facebook Page
+
+on:
+  schedule:
+    # เวลาใน GitHub Actions เป็น UTC — ประเทศไทยคือ UTC+7
+    - cron: "0 2 * * *"    # 09:00 น. ไทย
+    - cron: "0 6 * * *"    # 13:00 น. ไทย
+    - cron: "0 12 * * *"   # 19:00 น. ไทย
+  workflow_dispatch:        # กดรันเองได้จากแท็บ Actions
+    inputs:
+      dry_run:
+        description: "ทดลองรันโดยไม่โพสต์จริง"
+        type: boolean
+        default: false
+
+concurrency:
+  group: fb-autopost
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: ติดตั้ง dependencies
+        run: pip install -r requirements.txt
+
+      - name: รันบอท
+        env:
+          FB_PAGE_ID:     ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN:  ${{ secrets.FB_PAGE_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL:   ${{ vars.GEMINI_MODEL || 'gemini-3.5-flash' }}
+          POSTS_PER_RUN:  ${{ vars.POSTS_PER_RUN || '1' }}
+          MAX_AGE_HOURS:  ${{ vars.MAX_AGE_HOURS || '36' }}
+          POST_STYLE:     ${{ vars.POST_STYLE || 'comment' }}
+          DRY_RUN:        ${{ inputs.dry_run }}
+        run: python src/main.py
+
+      - name: บันทึกประวัติการโพสต์กลับเข้า repo
+        if: ${{ !inputs.dry_run }}
+        run: |
+          if [[ -n "$(git status --porcelain state/)" ]]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add state/
+            git commit -m "chore: อัปเดตประวัติการโพสต์ [skip ci]"
+            git push
+          else
+            echo "ไม่มีอะไรเปลี่ยนแปลง"
+          fi
