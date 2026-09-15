@@ -61,8 +61,10 @@ def main() -> None:
     pages = api("me/accounts", fields="id,name,access_token,tasks",
                 access_token=long_user).get("data", [])
     if not pages:
-        die("ไม่พบเพจเลย — เช็คว่าให้สิทธิ์ pages_show_list, pages_manage_posts, "
-            "pages_read_engagement ตอนสร้าง token แล้วหรือยัง")
+        die("ไม่พบเพจเลย — ตอนกด Generate Access Token ในขั้นตอนที่ 4\n"
+            "     ต้องติ๊กเพจของคุณในหน้าที่เด้งขึ้นมาด้วย และต้องให้สิทธิ์ครบ 5 อัน:\n"
+            "     pages_show_list, pages_manage_posts, pages_read_engagement,\n"
+            "     pages_manage_engagement, pages_manage_metadata")
 
     print(f"\nพบ {len(pages)} เพจ:")
     for i, page in enumerate(pages, 1):
